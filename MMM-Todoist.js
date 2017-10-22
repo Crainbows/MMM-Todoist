@@ -16,8 +16,9 @@ Module.register("MMM-Todoist", {
         updateInterval: 10 * 60 * 1000, // every 10 minutes,
         fade: true,
         fadePoint: 0.25,
-        sortBy: "Todoist",
+        sortBy: "date",
         showProject: true,
+        dateLimit: 0,
         projectColors: ["#95ef63", "#ff8581", "#ffc471", "#f9ec75", "#a8c8e4", "#d2b8a3", "#e2a8e4", "#cccccc", "#fb886e",
             "#ffcc00", "#74e8d3", "#3bd5fb", "#dc4fad", "#ac193d", "#d24726", "#82ba00", "#03b3b2", "#008299",
             "#5db2ff", "#0072c6", "#000000", "#777777"
@@ -101,6 +102,24 @@ Module.register("MMM-Todoist", {
                 });
                 
                 switch (self.config.sortBy) {
+                    case "date":
+                        items.sort(function (a, b){
+                            if (a.moment.unix() === b.moment.unix()){
+                                return b.priority - a.priority;
+                            }else{
+                                return a.moment.unix() - b.moment.unix();
+                            }
+                        });
+                        break;
+                    case "priority":
+                        items.sort(function (a, b){
+                            if (b.priority === a.priority){
+                                return a.moment.unix() - b.moment.unix();
+                            }else{
+                                return b.priority - a.priority;
+                            }
+                        });
+                        break;
                     default:
                     //Sort Todos by Todoist ordering
                     items.sort(function(a, b) {
@@ -109,6 +128,15 @@ Module.register("MMM-Todoist", {
                         return itemA - itemB;
                     });
                 }
+
+                //Remove tasks with due dates beyond X days from today
+                //1 = Only tasks due today and overdue
+                if (self.config.dateLimit) {
+                    items = items.filter(function(item){
+                        return ((moment().add(self.config.dateLimit, "days").unix() - item.moment.unix()) > 0);
+                    });
+                }
+                
                 
                 //Slice by max Entries 
                 items = items.slice(0, this.config.maximumEntries);
