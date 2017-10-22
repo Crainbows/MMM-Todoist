@@ -17,7 +17,7 @@ Module.register("MMM-Todoist", {
         updateInterval: 10 * 60 * 1000, // every 10 minutes,
         fade: true,
         fadePoint: 0.25,
-        sortByDate: false,
+        sortBy: "Todoist",
         showProject: true,
         projectColors: ["#95ef63", "#ff8581", "#ffc471", "#f9ec75", "#a8c8e4", "#d2b8a3", "#e2a8e4", "#cccccc", "#fb886e",
             "#ffcc00", "#74e8d3", "#3bd5fb", "#dc4fad", "#ac193d", "#d24726", "#82ba00", "#03b3b2", "#008299",
@@ -97,13 +97,16 @@ Module.register("MMM-Todoist", {
                 items.forEach(function(item) {
                     item.moment = moment(item.due_date_utc);
                 });
-
-                //Sort Todos by Todoist ordering
-                items.sort(function(a, b) {
-                    var itemA = a.item_order,
-                        itemB = b.item_order;
-                    return itemA - itemB;
-                });
+                
+                switch (self.config.sortBy) {
+                    default:
+                    //Sort Todos by Todoist ordering
+                    items.sort(function(a, b) {
+                        var itemA = a.item_order,
+                            itemB = b.item_order;
+                        return itemA - itemB;
+                    });
+                }
                 
                 //Slice by max Entries 
                 items = items.slice(0, this.config.maximumEntries);
