@@ -95,12 +95,7 @@ Module.register("MMM-Todoist", {
 
                 //Creates momentjs instance for each item
                 items.forEach(function(item) {
-                    item.moment = moment(itme.due_date_utc);
-                    // if (item.due_date_utc === null) {
-                    //     item.due_date_utc = "Fri 31 Dec 2100 23:59:59 +0000";
-                    // }
-                    // //Not used right now
-                    // item.ISOString = new Date(item.due_date_utc.substring(4, 15).concat(item.due_date_utc.substring(15, 23))).toISOString();
+                    item.moment = moment(item.due_date_utc);
                 });
 
                 //Sort Todos by Todoist ordering
