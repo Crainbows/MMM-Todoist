@@ -7,7 +7,6 @@
  * 
  * MIT Licensed.
  */
-var moment = require("moment");
 
 Module.register("MMM-Todoist", {
 
@@ -35,6 +34,9 @@ Module.register("MMM-Todoist", {
     // Define required scripts.
     getStyles: function() {
         return ["MMM-Todoist.css"];
+    },
+    getScripts: function() {
+        return ["moment.js"];
     },
     getTranslations: function() {
         return {
